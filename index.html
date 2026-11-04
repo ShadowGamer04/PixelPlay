@@ -190,7 +190,7 @@ h2 { font-size: clamp(1.8rem, 3vw, 2.45rem); letter-spacing: -.045em; margin-bot
         <label class="search-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input class="search" id="gameSearch" type="search" placeholder="Search games or genres..." aria-label="Search games" /></label>
       </div>
       <div class="filters" id="filters" aria-label="Filter games">
-        <button class="filter active" data-filter="all">All games</button><button class="filter" data-filter="puzzle">🧩 Puzzle</button><button class="filter" data-filter="arcade">👾 Arcade</button><button class="filter" data-filter="sports">⚽ Sports</button><button class="filter" data-filter="strategy">🧠 Strategy</button><button class="filter" data-filter="adventure">🗺️ Adventure</button><button class="filter" data-filter="creative">🎨 Creative</button>
+        <button class="filter active" data-filter="all">All 50 games</button><button class="filter" data-filter="puzzle">🧩 Puzzle</button><button class="filter" data-filter="arcade">👾 Arcade</button><button class="filter" data-filter="sports">⚽ Sports</button><button class="filter" data-filter="racing">🏁 Racing</button><button class="filter" data-filter="strategy">🧠 Strategy</button><button class="filter" data-filter="adventure">🗺️ Adventure</button><button class="filter" data-filter="creative">🎨 Creative</button>
       </div>
       <div class="game-grid" id="gameGrid">
         <article class="game-card" data-category="puzzle" data-search="memory match cards brain puzzle"><div class="cover purple"><span class="cover-label">Brain time</span><span class="cover-icon">🧠</span></div><div class="card-body"><div class="card-top"><h3>Memory Match</h3><span class="free-tag">FREE</span></div><p>Flip cards, find matching pairs, and test your memory.</p><div class="card-bottom"><span class="genre">Puzzle · Casual</span><button class="play-btn" data-play="memory">Play now →</button></div></div></article>
@@ -244,6 +244,24 @@ filters.forEach(btn => btn.addEventListener('click', () => {
 }));
 searchInput.addEventListener('input', filterGames);
 
+const extraGames = [
+  ['Turbo Track','🏎️','racing','race','Choose lanes and dodge traffic across five checkpoints.'],['Neon Drift','🚗','racing','race','Pick the clear lane and keep your drift run alive.'],['Grand Prix Dash','🏁','racing','race','Race through a five-stage arcade championship.'],['Rally Rush','🚙','racing','race','Navigate surprise hazards on a rally course.'],['Street Sprint','🚕','racing','race','Find the safest route through busy streets.'],['Rocket Racer','🚀','racing','race','Steer your rocket through a fast lane challenge.'],['Pixel Kart Cup','🛞','racing','race','Compete in a colorful five-round kart race.'],['Coastal Cruise','🌊','racing','race','Keep your car clear of obstacles by changing lanes.'],['Mountain Rally','⛰️','racing','race','Make smart lane choices on a mountain road.'],['Future Formula','🏎️','racing','race','Take on a futuristic formula racing challenge.'],['Desert Dash','🏜️','racing','race','Race through a desert route and avoid obstacles.'],['Drift Circuit','🌀','racing','race','Pick a clear lane through a twisting circuit.'],['City Racer','🚦','racing','race','Navigate a city sprint across five checkpoints.'],
+  ['Snake Classic','🐍','arcade','guess','Guess the secret number.'],['Brick Breaker','🧱','arcade','target','Hit the target with careful clicks.'],['Space Defender','👾','arcade','target','Aim for the correct alien signal.'],['Bubble Pop','🫧','arcade','target','Pop the target to score.'],['Fruit Catch','🍎','arcade','choice','Pick the fruit named in each round.'],['Whack-a-Mole','🐹','arcade','target','Find the hidden mole in a quick challenge.'],['Dodge Zone','💫','arcade','race','Avoid the obstacle lane at every checkpoint.'],['Color Switch','🎨','arcade','choice','Choose the color that matches the prompt.'],
+  ['Number Ninja','🔢','puzzle','math','Solve quick number puzzles to score points.'],['Sudoku Starter','🔣','puzzle','math','Solve bite-size number challenges.'],['Word Scramble','🔤','puzzle','typing','Unscramble a short word.'],['Spell Sprint','✍️','puzzle','typing','Type the word shown as quickly as you can.'],['Math Master','➗','puzzle','math','Solve a series of fast math questions.'],['Pattern Path','🟣','puzzle','sequence','Remember the pattern and repeat it.'],['Brain Teaser','💡','puzzle','quiz','Answer a tricky general knowledge question.'],
+  ['Trivia Trek','🌎','adventure','quiz','Test your knowledge with a mini quiz.'],['Treasure Quest','💎','adventure','guess','Find the hidden treasure number.'],['Dungeon Choices','🛡️','adventure','choice','Make clever choices to clear each room.'],['Jungle Explorer','🌴','adventure','quiz','Answer explorer questions on your journey.'],['Ocean Mission','🐠','adventure','choice','Choose the right sea creature.'],['Castle Escape','🏰','adventure','guess','Crack the castle code.'],
+  ['Chess Tactics','♟️','strategy','quiz','Pick the strongest move in a simple tactic.'],['Tower Planner','🗼','strategy','math','Plan your way through number challenges.'],['Memory Matrix','🧩','strategy','sequence','Remember and repeat a growing sequence.'],['Logic Lab','🧪','strategy','quiz','Use logic to solve a quick brain test.'],['Code Breaker','🔐','strategy','guess','Crack a secret number code.'],
+  ['Penalty Kick','⚽','sports','choice','Choose a corner and take your penalty shot.'],['Basketball Shots','🏀','sports','target','Pick the hoop target to score.'],['Tennis Toss','🎾','sports','reaction','Test your timing in a sports reaction round.'],['Mini Golf','⛳','sports','guess','Find the right power number for the putt.'],['Bowling Blitz','🎳','sports','math','Add up your bowling pin scores.'],['Skate Park','🛹','sports','sequence','Repeat the trick sequence to land it.'],['Soccer Skills','🥅','sports','choice','Choose the right move to beat the keeper.'],['Design Dash','🖌️','creative','choice','Choose colors and patterns for a mini design.']
+];
+const gameGrid = document.getElementById('gameGrid');
+const palette = ['purple','teal','orange','blue','pink','green'];
+extraGames.forEach((g,i) => {
+  const [name,icon,category,mode,description] = g;
+  const card = document.createElement('article'); card.className='game-card'; card.dataset.category=category; card.dataset.search=`${name} ${category} ${description} ${mode}`.toLowerCase();
+  card.innerHTML=`<div class="cover ${palette[i%palette.length]}"><span class="cover-label">${category==='racing'?'Racing':'Quick play'}</span><span class="cover-icon">${icon}</span></div><div class="card-body"><div class="card-top"><h3>${name}</h3><span class="free-tag">FREE</span></div><p>${description}</p><div class="card-bottom"><span class="genre">${category[0].toUpperCase()+category.slice(1)} · Mini-game</span><button class="play-btn" data-play="${name}">Play now →</button></div></div>`;
+  gameGrid.appendChild(card); cards.push(card);
+});
+const gameModes = Object.fromEntries(extraGames.map(g=>[g[0],{mode:g[3],description:g[4]}]));
+
 const modal = document.getElementById('modal');
 const gameArea = document.getElementById('gameArea');
 const modalTitle = document.getElementById('modalTitle');
@@ -255,6 +273,7 @@ function openGame(name) {
   if (name === 'ttt') startTicTacToe();
   else if (name === 'memory') startMemory();
   else if (name === 'reaction') startReaction();
+  else startQuickGame(name, gameModes[name]?.mode || 'quiz', gameModes[name]?.description || 'Play a quick challenge.');
 }
 function closeGame() { clearTimeout(reactionTimer); modal.classList.remove('open'); gameArea.innerHTML = ''; }
 closeModal.addEventListener('click', closeGame);
@@ -265,9 +284,7 @@ document.addEventListener('click', e => {
   if (play) openGame(play.dataset.play);
   const info = e.target.closest('[data-info]');
   if (info) {
-    modal.classList.add('open'); modalTitle.textContent = info.dataset.info;
-    gameArea.innerHTML = `<div><div style="font-size:3rem">✨</div><p><strong>${info.dataset.info}</strong> is a game category idea in this demo.</p><p>Explore the mini arcade for games you can play right here for free.</p><button class="game-action" id="backToArcade">Try a mini-game</button></div>`;
-    document.getElementById('backToArcade').addEventListener('click', () => startMemory());
+    openGame(info.dataset.info);
   }
 });
 function startTicTacToe() {
@@ -325,6 +342,26 @@ function startReaction() {
     if (state === 'waiting') { clearTimeout(reactionTimer); state = 'early'; pad.className = 'reaction-pad'; pad.textContent = 'Too soon! Tap to try again'; score.textContent = 'Wait for the green signal.'; return; }
     if (state === 'ready') { const ms = Math.round(performance.now() - startedAt); state = 'done'; pad.className = 'reaction-pad'; pad.textContent = `${ms} ms — play again`; score.textContent = ms < 250 ? 'Lightning fast! ⚡' : ms < 400 ? 'Nice reaction! 🙌' : 'Good try — can you beat it?'; }
   });
+}
+
+function startQuickGame(name, mode, description) {
+  modalTitle.textContent=name; let round=0,score=0,secret=1+Math.floor(Math.random()*9);
+  const render=()=>{
+    const prompts={quiz:['Which planet is known as the Red Planet?','What is the largest ocean?','How many sides does a hexagon have?'],choice:['Choose the star.','Choose the blue option.','Choose the number seven.'],sequence:['Remember this sequence, then enter it: 241','Remember this sequence, then enter it: 314'],typing:['Type this word exactly: PIXEL','Type this word exactly: ARCADE','Type this word exactly: TURBO']};
+    const prompt=mode==='quiz'?prompts.quiz[round%3]:mode==='choice'?prompts.choice[round%3]:mode==='sequence'?prompts.sequence[round%2]:mode==='typing'?prompts.typing[round%3]:mode==='math'?`What is ${round+3} + ${round+5}?`:mode==='guess'?'Guess a number from 1 to 9.':mode==='target'?'Tap the target to score.':'Choose a lane with no traffic!';
+    let controls='';
+    if(mode==='quiz')controls=['Mars','Venus','Jupiter'].map((v,i)=>`<button class="game-action quick-answer" data-answer="${i}">${v}</button>`).join(' ');
+    else if(mode==='choice')controls=['🔴 Red','🔵 Blue','⭐ Star','7'].map((v,i)=>`<button class="game-action quick-answer" data-answer="${i}">${v}</button>`).join(' ');
+    else if(['sequence','typing','math','guess'].includes(mode))controls=`<input id="quickInput" class="search" placeholder="Your answer" style="max-width:180px"><button class="game-action" id="quickSubmit">Check</button>`;
+    else if(mode==='target')controls='<button class="game-action" id="quickTarget">🎯 HIT THE TARGET</button>';
+    else controls=['⬅️ Left','⬆️ Middle','➡️ Right'].map((v,i)=>`<button class="game-action quick-lane" data-lane="${i}">${v}</button>`).join(' ');
+    gameArea.innerHTML=`<div style="width:100%"><p class="score">Round ${round+1} of 5 · Score: ${score}</p><p>${description}</p><h3>${prompt}</h3><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px">${controls}</div><p id="quickFeedback" aria-live="polite" style="min-height:24px;margin-top:14px"></p></div>`;
+    const finish=(ok,msg)=>{if(ok)score++;document.getElementById('quickFeedback').textContent=msg;round++;if(round>=5){setTimeout(()=>{gameArea.innerHTML=`<div><div style="font-size:3rem">🏆</div><h3>${name} complete!</h3><p class="score">Your score: ${score}/5</p><button class="game-action" id="quickAgain">Play again</button></div>`;document.getElementById('quickAgain').onclick=()=>startQuickGame(name,mode,description);},600);}else setTimeout(render,650);};
+    gameArea.querySelectorAll('.quick-answer').forEach(b=>b.onclick=()=>{const a=Number(b.dataset.answer),ok=mode==='quiz'?a===[0,0,0][round%3]:a===[2,1,3][round%3];finish(ok,ok?'Correct! +1 point':'Next round!');});
+    const submit=document.getElementById('quickSubmit');if(submit)submit.onclick=()=>{const v=document.getElementById('quickInput').value.trim().toUpperCase();const ok=mode==='sequence'?v===(round%2?'314':'241'):mode==='typing'?v===['PIXEL','ARCADE','TURBO'][round%3]:mode==='math'?Number(v)===(round+3)+(round+5):Number(v)===secret;finish(ok,ok?'You got it! +1 point':'Not quite — keep going!');};
+    const target=document.getElementById('quickTarget');if(target)target.onclick=()=>finish(true,'Bullseye! +1 point');
+    gameArea.querySelectorAll('.quick-lane').forEach(b=>b.onclick=()=>finish(Number(b.dataset.lane)===Math.floor(Math.random()*3), 'Checkpoint complete!'));
+  };render();
 }
 </script>
 </body>
